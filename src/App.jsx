@@ -12,11 +12,12 @@ function App() {
 
   useEffect(() => {
     if (isUserLoggedIn) {
-      (async () => {
-        setJobSources((await axios.get(BASE_API_URL + "/job-sources")).data);
-      })();
+      getJobSources();
     }
   }, [isUserLoggedIn]);
+  async function getJobSources() {
+    setJobSources((await axios.get(BASE_API_URL + "/job-sources")).data);
+  }
 
   async function handleLogin(e) {
     e.preventDefault();
