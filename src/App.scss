@@ -2,7 +2,15 @@ body{
   padding: 10px;
   background-color: #333;
   color:#ccc;
+  font-size: 2rem;
 }
 
 .App{
+  a{
+    text-decoration: none;
+    color: yellow;
+    &:hover{
+      text-decoration: underline;
+    }
+  }
 }  
