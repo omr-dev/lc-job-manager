@@ -9,12 +9,15 @@ function App() {
   const [jobSources, setJobSources] = useState([]);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
+  const [inputUsername, setInputUsername] = useState("");
+  const [inputPassword, setInputPassword] = useState(""); //TODO:Is it secure?
 
   useEffect(() => {
     if (isUserLoggedIn) {
       getJobSources();
     }
   }, [isUserLoggedIn]);
+
   async function getJobSources() {
     setJobSources((await axios.get(BASE_API_URL + "/job-sources")).data);
   }
@@ -34,7 +37,11 @@ function App() {
       <h1>LC Job Manager</h1>
       {isUserLoggedIn ? (
         <>
-          <p>There are {jobSources.length} jobs.</p>
+          <p>
+            {jobSources.length > 0
+              ? `There are ${jobSources.length} jobs.`
+              : `Loading`}
+          </p>
           <ul>
             {jobSources.map((source, ind) => {
               return (
@@ -51,7 +58,31 @@ function App() {
             handleLogin(e);
           }}
         >
-          <button>Login</button>
+          <div className="row">
+            <label htmlFor="username">Username:</label>
+            <input
+              name="username"
+              type="text"
+              value={inputUsername}
+              onChange={(e) => {
+                setInputUsername(e.target.value);
+              }}
+            />
+          </div>
+          <div className="row">
+            <label htmlFor="password">Password:</label>
+            <input
+              name="password"
+              type="password"
+              value={inputPassword}
+              onChange={(e) => {
+                setInputPassword(e.target.value);
+              }}
+            />
+          </div>
+          <div className="row">
+            <button>Login</button>
+          </div>
         </form>
       )}
     </div>
