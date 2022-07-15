@@ -5,13 +5,37 @@ import "./App.scss";
 
 function App() {
   const BASE_API_URL =
-    import.meta.env.VITE_BASE_API_URL || "http://localhost:3001";//TODO:change env file to remote
+    import.meta.env.VITE_BASE_API_URL || "http://localhost:3001"; 
   const [jobSources, setJobSources] = useState([]);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
   const [inputUsername, setInputUsername] = useState("");
   const [inputPassword, setInputPassword] = useState(""); //TODO:Is it secure?
   const [loginMessage, setLoginMessage] = useState("");
+
+  useEffect(() => {
+    (async () => {
+      await axios
+        .post(
+          BASE_API_URL + "/maintain-login",
+          {},
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          }
+        )
+        .then((response) => {
+          stayAsloggedIn(response.data.user);
+
+          getJobSources();
+        })
+        .catch((err) => {
+          console.error(28, err);
+          //logout();
+        });
+    })();
+  }, []);
 
   useEffect(() => {
     if (isUserLoggedIn) {
@@ -32,17 +56,27 @@ function App() {
         password: inputPassword,
       })
       .then((response) => {
-        login(response);
+        login(response.data);
       })
       .catch((err) => {
         console.error(err);
         setLoginMessage("bad login");
       });
   }
-  function login(user) {
-    setCurrentUser(user);
+  function login(response) {
+    setCurrentUser(response.user);
     setIsUserLoggedIn(true);
     setLoginMessage("");
+    localStorage.setItem("token", response.token);
+  }
+  function stayAsloggedIn(user) {
+    setCurrentUser(user);
+    setIsUserLoggedIn(true);
+  }
+  function logout() {
+    setCurrentUser({});
+    setIsUserLoggedIn(false);
+    localStorage.setItem("token", "");
   }
 
   return (
@@ -50,6 +84,7 @@ function App() {
       <h1>LC Job Manager</h1>
       {isUserLoggedIn ? (
         <>
+          <button onClick={logout}>Logout</button>
           <p>
             {jobSources.length > 0
               ? `There are ${jobSources.length} jobs.`
