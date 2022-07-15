@@ -1,0 +1,17 @@
+@url = http://localhost:3001
+
+## TEST  GET {{url}}
+
+## LOGIN 
+POST {{url}}/login 
+content-type:application/json
+
+{
+  "username":"max",
+  "password":"123"
+}
+
+## MAINTAIN LOGIN
+## POST {{url}}/maintain-login
+## content-type:application/json
+## authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJuYW1lIjoibWF4In0sImlhdCI6MTY1NzgzNjM2OCwiZXhwIjoxNjU3ODM3Mzg4fQ.UtmNrs5sQN4QxiQhqOphG0SeGd2Et4QpOx29L_Gt4bA
